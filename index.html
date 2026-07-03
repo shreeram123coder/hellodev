@@ -1,33 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Student Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Login</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    <style>
+        /* Custom Styling embedded directly */
+        body.login-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Subtle hover effect for interactivity */
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        .input-group-text {
+            background-color: transparent;
+            border-left: none;
+            cursor: pointer;
+        }
+
+        .form-control:focus + .input-group-text {
+            border-color: #86b7fe;
+        }
+        
+        .password-toggle {
+            transition: color 0.2s;
+        }
+        
+        .password-toggle:hover {
+            color: #0d6efd !important;
+        }
+    </style>
 </head>
 <body class="login-bg">
 
 <div class="container vh-100 d-flex justify-content-center align-items-center">
 
-<div class="card shadow-lg p-4 login-card">
+    <div class="card shadow-lg p-4 login-card">
+        
+        <h2 class="text-center text-primary mb-4 fw-bold">Student Login</h2>
+        
+        <form id="loginForm" novalidate>
+            
+            <div class="mb-3">
+                <label for="username" class="form-label text-secondary small fw-semibold">Username / Email</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                    <input type="email" id="username" class="form-control" placeholder="name@school.com" required>
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
+            </div>
 
-<h2 class="text-center text-primary mb-4">Student Login</h2>
+            <div class="mb-4">
+                <label for="password" class="form-label text-secondary small fw-semibold">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                    <input type="password" id="password" class="form-control" style="border-right: none;" placeholder="••••••••" required>
+                    <span class="input-group-text text-muted" id="togglePassword">
+                        <i class="bi bi-eye password-toggle"></i>
+                    </span>
+                    <div class="invalid-feedback">Password cannot be empty.</div>
+                </div>
+            </div>
 
-<input type="text" class="form-control mb-3" placeholder="Username">
+            <button type="submit" id="submitBtn" class="btn btn-primary w-100 fw-bold py-2">
+                <span id="btnText">Login</span>
+                <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            </button>
+            
+        </form>
 
-<input type="password" class="form-control mb-4" placeholder="Password">
-
-<a href="dashboard.html" class="btn btn-primary w-100">
-Login
-</a>
-
+    </div>
 </div>
 
-</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // 1. Interactive Password Visibility Toggle
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#password');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Toggle the eye icon design
+        this.querySelector('i').classList.toggle('bi-eye');
+        this.querySelector('i').classList.toggle('bi-eye-slash');
+    });
+
+    // 2. Interactive Form Validation and Loading State
+    const form = document.querySelector('#loginForm');
+    const submitBtn = document.querySelector('#submitBtn');
+    const btnText = document.querySelector('#btnText');
+    const btnSpinner = document.querySelector('#btnSpinner');
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Stop standard form submission
+        event.stopPropagation();
+
+        // Check Bootstrap validation rules
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+        } else {
+            // Trigger interactive loading animation
+            submitBtn.disabled = true;
+            btnText.textContent = "Authenticating...";
+            btnSpinner.classList.remove('d-none');
+
+            // Simulate server authentication delay before redirecting
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1500);
+        }
+    });
+</script>
 
 </body>
 </html>
